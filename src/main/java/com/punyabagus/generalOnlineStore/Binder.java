@@ -1,5 +1,7 @@
 package com.punyabagus.generalOnlineStore;
 
+import com.punyabagus.generalOnlineStore.dao.OrderDAO;
+import com.punyabagus.generalOnlineStore.dao.mongo.OrderDAOImp;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 
 /**
@@ -8,5 +10,6 @@ import org.glassfish.hk2.utilities.binding.AbstractBinder;
 public class Binder extends AbstractBinder {
     @Override
     protected void configure() {
+        bind(OrderDAOImp.class).to(OrderDAO.class);
     }
 }
