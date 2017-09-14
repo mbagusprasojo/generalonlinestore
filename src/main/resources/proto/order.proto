@@ -1,0 +1,45 @@
+option java_package = "com.punyabagus.generalOnlineStore.pojo";
+option java_outer_classname = "OrderData";
+
+import "product.proto";
+import "coupon.proto";
+
+message Order {
+    optional string id = 1;
+    optional string name = 2;
+    optional string phone = 3;
+    optional string email = 4;
+    optional string address = 5;
+
+    repeated Product product = 6;
+    optional Coupon coupon = 7;
+
+    optional Status status = 20;
+    optional ShipmentStatus shipmentStatus = 21;
+    optional string shipmentId = 22;
+
+    optional int32 createdDate = 51;
+    optional int32 submittedDate = 52;
+    optional int32 approvedDate = 53;
+    optional int32 canceledDate = 54;
+    optional int32 shippedDate = 55;
+    optional int32 closedDate = 56;
+}
+
+enum Status {
+    NEW = 1;
+    SUBMITTED = 2;
+    WAITING_APPROVAL = 3;
+    APPROVED = 4;
+    CANCELED = 5;
+    SHIPPED = 6;
+    CLOSED = 7;
+}
+
+enum ShipmentStatus {
+    MANIFESTED = 1;
+    ONTRANSIT = 2;
+    ONPROCESS = 3;
+    RECEIVED = 4;
+    DELIVERED = 5;
+}

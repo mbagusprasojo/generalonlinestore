@@ -110,7 +110,9 @@
                                 <exec executable="protoc">
                                     <arg value="--java_out=${project.basedir}/src/main/java" />
                                     <arg value="--proto_path=${project.basedir}/src/main/resources/proto" />
-                                    <arg value="${project.basedir}/src/main/resources/proto/common.proto" />
+                                    <arg value="${project.basedir}/src/main/resources/proto/order.proto" />
+                                    <arg value="${project.basedir}/src/main/resources/proto/product.proto" />
+                                    <arg value="${project.basedir}/src/main/resources/proto/coupon.proto" />
                                 </exec>
                             </tasks>
                             <sourceRoot>target/generated-sources</sourceRoot>
