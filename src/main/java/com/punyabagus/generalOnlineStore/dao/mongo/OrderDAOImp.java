@@ -7,16 +7,16 @@ import org.bson.Document;
 
 import java.util.List;
 
+import static com.punyabagus.generalOnlineStore.dao.mongo.Constant.DB_NAME;
+import static com.punyabagus.generalOnlineStore.dao.mongo.Constant.ORDER_COLLECTION;
+
 /**
  * Created by prasojo on 9/14/17.
  */
 public class OrderDAOImp extends MongoInstance<Order> implements OrderDAO<Order> {
 
-    private final static String DB_NAME = "GeneralOnlineStore";
-    private final static String COLLECTION_NAME = "Order";
-
     public OrderDAOImp() {
-        super(DB_NAME, COLLECTION_NAME, Order.class);
+        super(DB_NAME, ORDER_COLLECTION, Order.class);
     }
 
     @Override
@@ -28,5 +28,13 @@ public class OrderDAOImp extends MongoInstance<Order> implements OrderDAO<Order>
         } else {
             return null;
         }
+    }
+
+    @Override
+    public Order update(Order order) {
+        super.removeField(order.getId(), "product");
+        super.removeField(order.getId(), "coupon");
+
+        return super.update(order);
     }
 }

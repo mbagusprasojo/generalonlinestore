@@ -2,13 +2,14 @@ option java_package = "com.punyabagus.generalOnlineStore.pojo";
 option java_outer_classname = "CouponData";
 
 message Coupon {
-    optional string code = 1;
-    optional string desc = 2;
-    optional int32 quantity = 3;
-    optional int32 startDate = 4;
-    optional int32 endDate = 5;
-    optional int32 discountNominal = 6;
-    optional int32 discountPercentage = 7;
+    optional string id = 1;
+    optional string code = 2;
+    optional string desc = 3;
+    optional int32 quantity = 4;
+    optional int64 startDate = 5;
+    optional int64 endDate = 6;
+    optional int32 discountNominal = 7;
+    optional int32 discountPercentage = 8;
 }
 
 message CouponList {

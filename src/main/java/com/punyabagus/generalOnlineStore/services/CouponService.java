@@ -1,9 +1,11 @@
 package com.punyabagus.generalOnlineStore.services;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
+import com.punyabagus.generalOnlineStore.logic.CouponLogic;
+import com.punyabagus.generalOnlineStore.pojo.CouponData.Coupon;
+import com.punyabagus.generalOnlineStore.pojo.CouponData.CouponList;
+
+import javax.inject.Inject;
+import javax.ws.rs.*;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -13,6 +15,21 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 @Path("/coupon")
 public class CouponService {
 
+    private CouponLogic couponLogic;
+
+    @Inject
+    public CouponService(CouponLogic couponLogic) {
+        this.couponLogic = couponLogic;
+    }
+
+    @PUT
+    @Path("/")
+    @Produces(APPLICATION_JSON)
+    @Consumes(APPLICATION_JSON)
+    public Coupon create(Coupon product) {
+        return couponLogic.createCoupon(product);
+    }
+
     /**
      * Return List of Available Coupon
      * @return
@@ -20,7 +37,7 @@ public class CouponService {
     @GET
     @Path("/")
     @Produces(APPLICATION_JSON)
-    public Response list() {
-        return Response.ok("dummy").build();
+    public CouponList list() {
+        return couponLogic.getAll();
     }
 }

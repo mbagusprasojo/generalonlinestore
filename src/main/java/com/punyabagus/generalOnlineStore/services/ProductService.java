@@ -1,9 +1,11 @@
 package com.punyabagus.generalOnlineStore.services;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
+import com.punyabagus.generalOnlineStore.logic.ProductLogic;
+import com.punyabagus.generalOnlineStore.pojo.ProductData.Product;
+import com.punyabagus.generalOnlineStore.pojo.ProductData.ProductList;
+
+import javax.inject.Inject;
+import javax.ws.rs.*;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -13,6 +15,21 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 @Path("/product")
 public class ProductService {
 
+    private ProductLogic productLogic;
+
+    @Inject
+    public ProductService(ProductLogic productLogic) {
+        this.productLogic = productLogic;
+    }
+
+    @PUT
+    @Path("/")
+    @Produces(APPLICATION_JSON)
+    @Consumes(APPLICATION_JSON)
+    public Product create(Product product) {
+        return productLogic.createProduct(product);
+    }
+
     /**
      * Return List of Available Products
      * @return
@@ -20,7 +37,7 @@ public class ProductService {
     @GET
     @Path("/")
     @Produces(APPLICATION_JSON)
-    public Response list() {
-        return Response.ok("dummy").build();
+    public ProductList list() {
+        return productLogic.getAll();
     }
 }

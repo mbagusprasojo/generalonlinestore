@@ -18,12 +18,12 @@ message Order {
     optional ShipmentStatus shipmentStatus = 21;
     optional string shipmentId = 22;
 
-    optional int32 createdDate = 51;
-    optional int32 submittedDate = 52;
-    optional int32 approvedDate = 53;
-    optional int32 canceledDate = 54;
-    optional int32 shippedDate = 55;
-    optional int32 closedDate = 56;
+    optional int64 createdDate = 51;
+    optional int64 submittedDate = 52;
+    optional int64 approvedDate = 53;
+    optional int64 canceledDate = 54;
+    optional int64 shippedDate = 55;
+    optional int64 closedDate = 56;
 }
 
 enum Status {

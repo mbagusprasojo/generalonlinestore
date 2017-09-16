@@ -1,5 +1,10 @@
 package com.punyabagus.generalOnlineStore.services;
 
+import com.punyabagus.generalOnlineStore.logic.TransactionLogic;
+import com.punyabagus.generalOnlineStore.pojo.OrderData.Order;
+import com.punyabagus.generalOnlineStore.pojo.OrderData.Status;
+
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
@@ -11,16 +16,11 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 @Path("/order")
 public class OrderService {
 
-    /**
-     * Create blank new order
-     * @return
-     */
-    @PUT
-    @Path("/")
-    @Consumes(APPLICATION_JSON)
-    @Produces(APPLICATION_JSON)
-    public Response save() {
-        return Response.ok("dummy").build();
+    private TransactionLogic transactionLogic;
+
+    @Inject
+    public OrderService(TransactionLogic transactionLogic) {
+        this.transactionLogic = transactionLogic;
     }
 
     /**
@@ -31,8 +31,15 @@ public class OrderService {
     @Path("/product")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    public Response addProduct() {
-        return Response.ok("dummy").build();
+    public Response addProduct(Order order) {
+
+        Order newOrder = transactionLogic.addProduct(order);
+
+        if (newOrder != null) {
+            return Response.ok("Product Added.").build();
+        }
+
+        return Response.serverError().build();
     }
 
     /**
@@ -46,7 +53,12 @@ public class OrderService {
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     public Response removeProduct(@PathParam("orderId") String orderId, @PathParam("productId") String productId) {
-        return Response.ok("dummy").build();
+
+        if (transactionLogic.removeProduct(orderId, productId)) {
+            return Response.ok("Product Removed.").build();
+        }
+
+        return Response.serverError().build();
     }
 
     /**
@@ -57,8 +69,15 @@ public class OrderService {
     @Path("/coupon")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    public Response addCoupon() {
-        return Response.ok("dummy").build();
+    public Response addCoupon(Order order) {
+
+        Order newOrder = transactionLogic.addCoupon(order);
+
+        if (newOrder != null) {
+            return Response.ok("Coupon Added.").build();
+        }
+
+        return Response.serverError().build();
     }
 
     /**
@@ -71,7 +90,12 @@ public class OrderService {
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     public Response removeCoupon(@PathParam("orderId") String orderId) {
-        return Response.ok("dummy").build();
+
+        if (transactionLogic.removeCoupon(orderId)) {
+            return Response.ok("Coupon Removed.").build();
+        }
+
+        return Response.serverError().build();
     }
 
     /**
@@ -82,8 +106,8 @@ public class OrderService {
     @GET
     @Path("/{orderId}")
     @Produces(APPLICATION_JSON)
-    public Response get(@PathParam("orderId") String orderId) {
-        return Response.ok("dummy").build();
+    public Order get(@PathParam("orderId") String orderId) {
+        return transactionLogic.getOrderDetails(orderId);
     }
 
     /**
@@ -95,7 +119,13 @@ public class OrderService {
     @Path("/status/{orderId}")
     @Produces(APPLICATION_JSON)
     public Response getStatus(@PathParam("orderId") String orderId) {
-        return Response.ok("dummy").build();
+        Status status = transactionLogic.getOrderStatus(orderId);
+
+        if (status != null) {
+            return Response.ok(status.toString()).build();
+        }
+
+        return Response.ok("Order not Found.").build();
     }
 
     /**

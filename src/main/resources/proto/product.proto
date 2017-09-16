@@ -2,10 +2,12 @@ option java_package = "com.punyabagus.generalOnlineStore.pojo";
 option java_outer_classname = "ProductData";
 
 message Product {
-    optional string code = 1;
-    optional string name = 2;
-    optional string desc = 3;
-    optional int32 quantity = 4;
+    optional string id = 1;
+    optional string code = 2;
+    optional string name = 3;
+    optional string desc = 4;
+    optional int32 quantity = 5;
+    optional int64 price = 6;
 }
 
 message ProductList {
