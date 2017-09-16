@@ -2,4 +2,3 @@ target/
 tomcat.8080/
 *.iml
 .idea
-src/main/java/com/punyabagus/generalOnlineStore/pojo/
