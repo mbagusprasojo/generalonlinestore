@@ -75,3 +75,18 @@ Return details of order
 
 ##### GET /order/status/{orderId}
 Return status of order
+
+##### GET /order
+Return all order
+
+##### POST /order/submit
+Submit Order : Data Format
+````
+{
+    "id" : [String],
+    "name" : [String],
+    "address" : [String],
+    "phone" : [String],
+    "email" : [String]
+}
+````

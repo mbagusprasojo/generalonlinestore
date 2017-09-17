@@ -26,6 +26,10 @@ message Order {
     optional int64 closedDate = 56;
 }
 
+message OrderList {
+    repeated Order order = 1;
+}
+
 enum Status {
     NEW = 1;
     SUBMITTED = 2;

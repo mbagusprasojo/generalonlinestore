@@ -6,6 +6,7 @@ import com.punyabagus.generalOnlineStore.dao.ProductDAO;
 import com.punyabagus.generalOnlineStore.pojo.CouponData.Coupon;
 import com.punyabagus.generalOnlineStore.pojo.OrderData;
 import com.punyabagus.generalOnlineStore.pojo.OrderData.Order;
+import com.punyabagus.generalOnlineStore.pojo.OrderData.OrderList;
 import com.punyabagus.generalOnlineStore.pojo.OrderData.Status;
 import com.punyabagus.generalOnlineStore.pojo.ProductData.Product;
 
@@ -99,6 +100,14 @@ public class TransactionLogic {
     }
 
     /**
+     * Get all order
+     * @return
+     */
+    public OrderList getAll() {
+        return OrderList.newBuilder().addAllOrder(orderDAO.getAll()).build();
+    }
+
+    /**
      * Get Status for an Order
      * @param orderId
      * @return
@@ -106,6 +115,40 @@ public class TransactionLogic {
     public Status getOrderStatus(String orderId) {
         Order result = (Order) orderDAO.getById(orderId);
         return result != null ? result.getStatus() : null;
+    }
+
+    /**
+     * Submit Order - Shall update order status from NEW to SUBMITTED
+     * @param order
+     * @return
+     */
+    public Order submitOrder(Order order) {
+        Order result = (Order) orderDAO.getById(order.getId());
+
+        if (result != null) {
+            if (result.getProductCount() > 0
+                    && result.getStatus().equals(Status.NEW)
+                    && validateOrder(order)
+                    && validateProduct(result)) {
+
+                // Reduce quantity for each product and coupon if any
+                reduceStock(result);
+
+                // Change status and get timestamp
+                Order.Builder updatedOrder = result.toBuilder().setStatus(Status.SUBMITTED).setSubmittedDate(Instant.now().getEpochSecond());
+
+                // Populate customer info
+                updatedOrder.setName(order.getName());
+                updatedOrder.setPhone(order.getPhone());
+                updatedOrder.setEmail(order.getEmail());
+                updatedOrder.setAddress(order.getAddress());
+
+                // Update on mongo
+                return (Order) orderDAO.update(updatedOrder.build());
+            }
+        }
+
+        return Order.newBuilder().build();
     }
 
     /**
@@ -160,5 +203,66 @@ public class TransactionLogic {
                 .setCreatedDate(Instant.now().getEpochSecond())
                 .setStatus(OrderData.Status.NEW)
                 .build());
+    }
+
+    /**
+     * Reduce stock for each product on order and coupon if any
+     * @param order
+     */
+    void reduceStock(Order order) {
+        order.getProductList().stream().forEach(product -> {
+            Product stock = (Product) productDAO.getById(product.getId());
+
+            productDAO.update(stock.toBuilder().setQuantity(stock.getQuantity() - product.getQuantity()).build());
+        });
+
+        if (order.hasCoupon()) {
+            Coupon coupon = (Coupon) couponDAO.getByCode(order.getCoupon().getCode());
+
+            couponDAO.update(coupon.toBuilder().setQuantity(coupon.getQuantity() - 1).build());
+        }
+    }
+
+    /**
+     * Submitted order shall had customer name, phone, address, email
+     * @param order
+     * @return
+     */
+    boolean validateOrder(Order order) {
+        if (!order.hasName() || order.getName().isEmpty()) {
+            return false;
+        }
+
+        if (!order.hasPhone() || order.getPhone().isEmpty()) {
+            return false;
+        }
+
+        if (!order.hasEmail() || order.getEmail().isEmpty()) {
+            return false;
+        }
+
+        if (!order.hasAddress() || order.getAddress().isEmpty()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Shall return false if any of its product is not valid
+     * @param order
+     * @return
+     */
+    boolean validateProduct(Order order) {
+
+        if (order.getProductCount() == 0 || order.getProductList().stream().anyMatch(product -> {
+            Product stock = (Product) productDAO.getById(product.getId());
+            // Will match if product is not valid and its quantity is not enough
+            return (stock != null && stock.getQuantity() >= product.getQuantity()) ? false : true;
+        })) {
+            return false;
+        }
+
+        return true;
     }
 }

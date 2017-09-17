@@ -15,6 +15,7 @@
         <mongo.version>3.2.2</mongo.version>
         <mongowrapper.version>1.0-SNAPSHOT</mongowrapper.version>
         <junit.version>4.12</junit.version>
+        <mock.version>2.10.0</mock.version>
     </properties>
 
     <dependencies>
@@ -93,36 +94,45 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mock.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+
+
     </dependencies>
 
     <build>
         <finalName>General Online Store</finalName>
 
         <plugins>
-            <!--<plugin>-->
-                <!--<artifactId>maven-antrun-plugin</artifactId>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>generate-sources</id>-->
-                        <!--<phase>generate-sources</phase>-->
-                        <!--<configuration>-->
-                            <!--<tasks>-->
-                                <!--<exec executable="protoc">-->
-                                    <!--<arg value="&#45;&#45;java_out=${project.basedir}/src/main/java" />-->
-                                    <!--<arg value="&#45;&#45;proto_path=${project.basedir}/src/main/resources/proto" />-->
-                                    <!--<arg value="${project.basedir}/src/main/resources/proto/order.proto" />-->
-                                    <!--<arg value="${project.basedir}/src/main/resources/proto/product.proto" />-->
-                                    <!--<arg value="${project.basedir}/src/main/resources/proto/coupon.proto" />-->
-                                <!--</exec>-->
-                            <!--</tasks>-->
-                            <!--<sourceRoot>target/generated-sources</sourceRoot>-->
-                        <!--</configuration>-->
-                        <!--<goals>-->
-                            <!--<goal>run</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-sources</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <tasks>
+                                <exec executable="protoc">
+                                    <arg value="--java_out=${project.basedir}/src/main/java" />
+                                    <arg value="--proto_path=${project.basedir}/src/main/resources/proto" />
+                                    <arg value="${project.basedir}/src/main/resources/proto/order.proto" />
+                                    <arg value="${project.basedir}/src/main/resources/proto/product.proto" />
+                                    <arg value="${project.basedir}/src/main/resources/proto/coupon.proto" />
+                                </exec>
+                            </tasks>
+                            <sourceRoot>target/generated-sources</sourceRoot>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

@@ -8,5 +8,6 @@ import java.util.List;
 public interface CouponDAO<Coupon> {
     Coupon getByCode(String code);
     Coupon insert(Coupon coupon);
+    Coupon update(Coupon coupon);
     List<Coupon> getAll();
 }

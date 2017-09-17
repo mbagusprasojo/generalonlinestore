@@ -37,4 +37,9 @@ public class OrderDAOImp extends MongoInstance<Order> implements OrderDAO<Order>
 
         return super.update(order);
     }
+
+    @Override
+    public List<Order> getAll() {
+        return super.find(new Document());
+    }
 }

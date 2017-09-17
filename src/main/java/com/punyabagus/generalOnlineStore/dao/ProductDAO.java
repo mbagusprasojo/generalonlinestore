@@ -7,6 +7,7 @@ import java.util.List;
  */
 public interface ProductDAO<Product> {
     Product insert(Product product);
+    Product update(Product product);
     Product getById(String id);
     List<Product> getAll();
 }

@@ -2,6 +2,7 @@ package com.punyabagus.generalOnlineStore.services;
 
 import com.punyabagus.generalOnlineStore.logic.TransactionLogic;
 import com.punyabagus.generalOnlineStore.pojo.OrderData.Order;
+import com.punyabagus.generalOnlineStore.pojo.OrderData.OrderList;
 import com.punyabagus.generalOnlineStore.pojo.OrderData.Status;
 
 import javax.inject.Inject;
@@ -31,15 +32,10 @@ public class OrderService {
     @Path("/product")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    public Response addProduct(Order order) {
-
+    public Order addProduct(Order order) {
         Order newOrder = transactionLogic.addProduct(order);
 
-        if (newOrder != null) {
-            return Response.ok("Product Added.").build();
-        }
-
-        return Response.serverError().build();
+        return newOrder != null ? newOrder : Order.newBuilder().build();
     }
 
     /**
@@ -69,15 +65,11 @@ public class OrderService {
     @Path("/coupon")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    public Response addCoupon(Order order) {
+    public Order addCoupon(Order order) {
 
         Order newOrder = transactionLogic.addCoupon(order);
 
-        if (newOrder != null) {
-            return Response.ok("Coupon Added.").build();
-        }
-
-        return Response.serverError().build();
+        return newOrder != null ? newOrder : Order.newBuilder().build();
     }
 
     /**
@@ -96,6 +88,17 @@ public class OrderService {
         }
 
         return Response.serverError().build();
+    }
+
+    /**
+     * Return all order
+     * @return
+     */
+    @GET
+    @Path("/")
+    @Produces(APPLICATION_JSON)
+    public OrderList getAll() {
+        return transactionLogic.getAll();
     }
 
     /**
@@ -129,20 +132,15 @@ public class OrderService {
     }
 
     /**
-     * Change order status
-     * NEW -> SUBMITTED
-     * SUBMITTED -> WAITINGAPPROVAL
-     * WAITINGAPPROVAL -> APPROVED
-     * WAITINGAPPROVAL -> CANCELED
-     * APPROVED -> SHIPPED
-     * SHIPPED -> CLOSED
+     * Submit Order
+     * @param order
      * @return
      */
     @POST
-    @Path("/status/{orderId}")
+    @Path("/submit")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    public Response updateStatus() {
-        return Response.ok("dummy").build();
+    public Order submitOrder(Order order) {
+        return transactionLogic.submitOrder(order);
     }
 }
