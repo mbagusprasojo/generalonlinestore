@@ -1,13 +1,13 @@
-#General Online Store
+# General Online Store
 
-####Local Deployment
+#### Local Deployment
 
 - Install Local MongoDB
 - Install Mongo-instance from https://github.com/mbagusprasojo/mongo-instance (mvn clean install)
 - mvn clean compile
 - Just run Main class
 
-####LIST API
+#### LIST API
 
 ##### PUT /product
 Data Format : Json
